@@ -7,10 +7,10 @@ plugins:
 # customer can modify this section for adding S3 info
 # prefix optional - only if S3 event needs to be triggered for a specific prefix/folder
 custom:
-  s3_bucketname: sync-media-to-cld-2
-  s3_prefix: cld_folder/
-  cld_folder: s3_sync_folder
-  cld_preset: ml_default
+  s3_bucketname: <S3-BUCKET-NAME>
+  s3_prefix: <S3-PREFIX/>
+  cld_folder: <CLD-FOLDER>
+  cld_preset: <CLD-UPLOAD-PREFIX>
 
 provider:
   name: aws
