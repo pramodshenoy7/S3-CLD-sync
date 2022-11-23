@@ -16,6 +16,7 @@ More about the framework - https://www.serverless.com/
   * cd to <project_name>
 * copy files from this repo
 * run 'npm install' to install the required packages
+* modify lines 10-13 in serverless.yml
 * sls deploy -s prod 
   * add '--aws-profile <profile_name>' in case it needs a profile information for fetching keys
 * test locally without deploying to AWS
