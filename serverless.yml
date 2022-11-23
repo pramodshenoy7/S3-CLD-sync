@@ -1,0 +1,74 @@
+service: s3-cld-sync
+frameworkVersion: '3'
+
+plugins:
+ - serverless-offline
+
+# customer can modify this section for adding S3 info
+# prefix optional - only if S3 event needs to be triggered for a specific prefix/folder
+custom:
+  s3_bucketname: sync-media-to-cld-2
+  s3_prefix: cld_folder/
+  cld_folder: s3_sync_folder
+  cld_preset: ml_default
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  stage: ${opt:stage}
+  region: us-east-1
+  timeout: 10
+  memorySize: 128
+  tracing:
+    lambda: true
+  iam:
+    role:
+      statements:
+        - Effect: "Allow"
+          Action: 
+            - secretsmanager:GetSecretValue
+            - secretsmanager:DescribeSecret
+            - secretsmanager:ListSecrets
+          Resource: "*"  
+
+functions:
+  s3-cld-sync:
+    handler: sync.handler
+    name: ${opt:stage}_s3_cld_sync
+    description: receives S3 events and updates Cloudinary
+    environment:
+      STAGE: ${opt:stage}
+      CLD_FOLDER: ${self:custom.cld_folder}
+      CLD_PRESET: ${self:custom.cld_preset}
+    events:
+      - s3:
+          bucket: ${self:custom.s3_bucketname}
+          event: s3:ObjectCreated:*
+          rules:
+            - prefix: ${self:custom.s3_prefix}
+      - s3:
+          bucket: ${self:custom.s3_bucketname}
+          event: s3:ObjectRemoved:*
+          rules:
+            - prefix: ${self:custom.s3_prefix}     
+
+resources:
+  Resources:
+    BucketPolicy:
+      Type: AWS::S3::BucketPolicy
+      Properties:
+        Bucket: ${self:custom.s3_bucketname}
+        PolicyDocument:
+          Statement:
+            - Action:
+                - s3:GetObject
+              Resource:
+                - arn:aws:s3:::${self:custom.s3_bucketname}/*
+              Effect: Allow
+              Principal:
+                AWS:
+                  - arn:aws:iam::232482882421:root
+
+
+
+

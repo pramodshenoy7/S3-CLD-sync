@@ -1,0 +1,17 @@
+{
+  "name": "s3-cld-sync",
+  "version": "1.0.0",
+  "description": "",
+  "main": "handler.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.1258.0",
+    "cloudinary": "^1.32.0",
+    "fs": "^0.0.1-security",
+    "serverless-offline": "^11.4.0"
+  }
+}
